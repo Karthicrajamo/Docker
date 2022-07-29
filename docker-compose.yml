@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_db_data_container:/var/lib/mysql
+
+  adminer_container:
+    image: adminer:latest
+
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - db
+
+  photogram:
+    build: "photogram/."
+    # restart: always
+    ports: 
+      - 80:80
+    volumes:
+      - user:/root
+      # - photo:/home/root/html
+      - ./photogram/html:/var/www/html
+    
+
+volumes:
+  user: 
+  # photo:
+  mysql_db_data_container:
